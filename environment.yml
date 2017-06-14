@@ -1,0 +1,45 @@
+name: pde_env
+channels: !!python/tuple
+- conda-forge
+- defaults
+dependencies:
+- conda-forge::appnope=0.1.0=py27_0
+- conda-forge::bleach=1.5.0=py27_0
+- conda-forge::cycler=0.10.0=py27_0
+- conda-forge::decorator=4.0.11=py27_0
+- conda-forge::entrypoints=0.2.2=py27_1
+- conda-forge::ipykernel=4.6.1=py27_0
+- conda-forge::ipython=5.3.0=py27_0
+- conda-forge::ipython_genutils=0.2.0=py27_0
+- conda-forge::ipywidgets=6.0.0=py27_0
+- conda-forge::jupyter=1.0.0=py27_0
+- conda-forge::jupyter_client=5.0.1=py27_0
+- conda-forge::jupyter_console=5.1.0=py27_0
+- conda-forge::jupyter_core=4.3.0=py27_0
+- conda-forge::libpng=1.6.28=0
+- conda-forge::matplotlib=2.0.0=np110py27_1
+- conda-forge::notebook=5.0.0=py27_0
+- conda-forge::openssl=1.0.2k=0
+- conda-forge::pandoc=1.19.2=0
+- conda-forge::pandocfilters=1.4.1=py27_0
+- conda-forge::pip=9.0.1=py27_0
+- conda-forge::python=2.7.13=1
+- conda-forge::python-dateutil=2.6.0=py27_0
+- mayavi=4.5.0=py27_0
+- mkl=11.3.3=0
+- numpy=1.10.4=py27_2
+- python.app=1.2=py27_4
+- qt=4.8.7=4
+- scipy=0.17.1=np110py27_1
+- vtk=6.3.0=py27_1
+- pip:
+  - backports-abc==0.5
+  - backports.shutil-get-terminal-size==1.0.0
+  - backports.ssl-match-hostname==3.5.0.1
+  - environment-kernels==1.1
+  - ipdb==0.10.3
+  - ipython-genutils==0.2.0
+  - jupyter-client==5.0.1
+  - jupyter-console==5.1.0
+  - jupyter-core==4.3.0
+  - prompt-toolkit==1.0.14
