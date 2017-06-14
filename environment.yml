@@ -27,7 +27,6 @@ dependencies:
 - mayavi=4.5.0=py27_0
 - mkl=11.3.3=0
 - numpy=1.10.4=py27_2
-- python.app=1.2=py27_4
 - qt=4.8.7=4
 - scipy=0.17.1=np110py27_1
 - vtk=6.3.0=py27_1
