@@ -1,5 +1,5 @@
 ## MS_turingspat
-Here is some notebooks with the code Im running for my MS project. If you are running conda, you can simply create an environemnt from environemnt.yml, then go to jupyter notebook to run or edit the code.
+Here are some notebooks Im running for my MS project. If you are running conda, you can simply create the environment from environment.yml, then launch jupyter notebook to run or edit the code. 
 
 ## Useful pdf-link to install NEURON on MAC OS X:
 https://www.neuron.yale.edu/ftp/neuron/nrn_mac_install.pdf
