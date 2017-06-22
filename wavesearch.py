@@ -4,6 +4,7 @@ import sys
 import pandas as pd
 import matplotlib.pyplot as plt
 import time
+from mpl_toolkits.mplot3d import axes3d
 start_time1 = time.time()
 
 size = float(sys.argv[1])
@@ -13,8 +14,7 @@ times = int(sys.argv[4])
 au = float(sys.argv[5])
 Du = float(sys.argv[6])
 
-
-def plot_it():
+def plot_it(time_period, times, u_timespace):
     # Activator plt
     y1 = u.nodes.concentration
     x1 = u.nodes.x
@@ -54,6 +54,26 @@ def plot_it():
     plt.xlabel('System size')
     plt.ylabel('Concentration')
     plt.plot(x3, y3, '-g')
+
+    #3D plot
+    ax = plt.subplot(224, projection='3d')
+
+    # Grab data.
+    xx = u_fft_x_norm
+    yy = [i*time_period for i in np.arange(0, times)]
+    zz = u_timespace
+
+    XX, YY = np.meshgrid(xx, yy)
+    ZZ = zz
+
+    # Plot a basic wireframe.
+    ax.plot_surface(XX, YY, ZZ, rstride=20, cstride=20)
+    ax.set_xlabel('Space')
+    ax.set_ylabel('Time')
+    ax.set_zlabel('Value')
+    ax.set_title('Activator profile')
+
+    #plt.show() Interactive 3D mode
 
 def wave_search(size, size_segments, time_period, times, au, Du):
     # needed for standard run system
@@ -107,7 +127,7 @@ def wave_search(size, size_segments, time_period, times, au, Du):
     T = time_period
     u_timespace = []
 
-    for i in xrange(1, T_d):
+    for i in np.arange(0, T_d):
         h.continuerun(i * T)
         u_timespace.append(u.nodes.concentration)
 
@@ -139,7 +159,7 @@ def wave_search(size, size_segments, time_period, times, au, Du):
         u_maxx = (np.argmax(2.0 * np.abs(Y1[:N] / N)))
         wavelen = np.around(1 / X[u_maxx])
 
-    plot_it()
+    plot_it(time_period, times, u_timespace)
     plt.savefig('results/plots/{0}_{1}_{2}_{3}_{4}_{5}.png'.format(size, size_segments, time_period, times, au, Du))
 
     return wavelen
