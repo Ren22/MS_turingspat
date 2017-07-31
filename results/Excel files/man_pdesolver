@@ -1,0 +1,53 @@
+from scipy.sparse import diags
+from scipy.integrate import odeint
+import numpy as np
+import matplotlib.pyplot as plt
+
+def f(u, h):
+    puff = []
+    for i in u:
+        puff.append(i*(1. - i)*(0.3 - i))
+    puff[0] = (h/2.)*puff[0]
+    puff[-1] = (h/2.)*puff[-1]
+    return puff
+
+h = 100.
+x = np.linspace(0., 10., num=h)
+
+diag = [-2]*(len(x))
+diag[0] = -h
+diag[-1] = h**2
+
+diag_up = [1]*(len(x)-1)
+diag_up[0] = h
+
+diag_down = [1]*(len(x)-1)
+diag_down[-2] = 0
+
+diagonals = [diag, diag_up, diag_down]
+A = diags(diagonals, [0, 1, -1]).toarray()
+# print(A)
+A = A/h**2
+
+init_cond = [0]*(len(x))
+for i in range(int(round(0.2*len(init_cond)))):
+    init_cond[i] = 1.
+# print(init_cond)
+
+t = np.linspace(0, 10, 5)
+
+def pde(u, t, A, h):
+    plt.plot(x,u)
+    plt.show()
+    dudt = A.dot(u) - f(u, h)
+    print dudt
+    return dudt
+
+sol = odeint(pde, init_cond, t, args=(A, h))
+# print(sol)
+
+plt.plot(x, sol[-1])
+plt.show()
+# plt.plot(x, np.sin(x))
+# plt.show()
+# print(init_cond)
