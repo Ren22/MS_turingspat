@@ -1,15 +1,13 @@
 from scipy.integrate import odeint
 import numpy as np
 import matplotlib.pyplot as plt
-
+from mpl_toolkits.mplot3d import axes3d
 
 def f(u, v, M, a, b, c, d, au, u0, v0, n):
     return (a * (u - u0) + b * (v - v0) - au * (u - u0) ** 3) * M ** n
 
-
 def g(u, v, M, a, b, c, d, au, u0, v0, n):
     return (c * (u - u0) + d * (v - v0)) * M ** n
-
 
 def pde(y, t, Du, Dv, a, b, c, d, au, u0, v0, n, M, dx):
     u = y[::2]
@@ -30,20 +28,22 @@ def pde(y, t, Du, Dv, a, b, c, d, au, u0, v0, n, M, dx):
     return dydt
 
 
-h = 100.
-x = np.linspace(0., 50., num=h)
-print(len(x))
+h = 200.
+x = np.linspace(0., 30., num=h)
 
-# init_cond = 0.5 * np.sin(2.*np.pi*x/5.)
-# plt.plot(x, init_cond)
-# plt.show()
+# #step-like function
+# init_cond = [0]*(len(x))
+# for i in range(int(round(0.2*len(init_cond)))):
+#     init_cond[i] = 1.
 
-init_cond = [0] * (len(x))
-for i in range(int(round(0.2 * len(init_cond)))):
-    init_cond[i] = 1.
-print(init_cond)
+# Sinusoids as initial funct
+init_cond = np.empty_like(x)
+init_cond_u = init_cond[::2]
+init_cond_v = init_cond[1::2]
+init_cond_u[0:len(init_cond_u)] = 0.5 + 0.1 * np.cos(2. * np.pi * x[::2] / x[-1])
+init_cond_v[0:len(init_cond_u)] = 1. + 0.1 * np.cos(2. * np.pi * x[1::2] / x[-1])
 
-t = np.linspace(0, 1000, 2000)
+t = np.linspace(0, 1000, 1000)
 
 Du = 1.;
 Dv = 20.;
@@ -54,10 +54,47 @@ d = -0.8;
 au = 5.;
 u0 = 0.5;
 v0 = 0.5;
-n = -2;
+n = -2.;
 M = 100. * (1. / x[-1]);
 dx = len(x) / h
 sol = odeint(pde, init_cond, t, args=(Du, Dv, a, b, c, d, au, u0, v0, n, M, dx), ml=2, mu=2)
 
-plt.plot(x, sol[-1])
+##2D plot
+plt.figure(figsize=(10, 7))
+# activator
+plt.subplot(221)
+plt.title('Activator profile')
+plt.xlabel('System size')
+plt.ylabel('Concentration')
+plt.plot(x[::2], sol[-1][::2], '-b')
+
+# inhibitor
+plt.subplot(222)
+plt.title('Inhibitor profile')
+plt.xlabel('System size')
+plt.ylabel('Concentration')
+plt.plot(x[1::2], sol[-1][1::2], '-r')
+
+##3D plot (activator)
+ax = plt.subplot(224, projection='3d')
+
+# Grab data.
+xx = x[::2]
+yy = t
+zz = []
+for i in sol:
+    zz.append(i[::2])
+
+XX, YY = np.meshgrid(xx, yy);
+ZZ = zz
+
+# Plot a basic wireframe
+ax.plot_surface(XX, YY, ZZ, rstride=20, cstride=20)
+ax.set_xlabel('Space')
+ax.set_ylabel('Time')
+ax.set_zlabel('Value')
+ax.set_title('Activator profile')
+
+# Show plot
+
 plt.show()
