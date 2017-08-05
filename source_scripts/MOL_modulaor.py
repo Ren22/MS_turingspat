@@ -29,7 +29,6 @@ def pde(y, t, Du, Duc, kon, koff, V, L, d, dx):
 
 h = 100.
 x = np.linspace(0., 100., num=h)
-print(len(x))
 
 # #step-like function
 # init_cond = [0]*(len(x))
@@ -40,34 +39,41 @@ print(len(x))
 init_cond = np.empty_like(x)
 init_cond_u = init_cond[::2]
 init_cond_uc = init_cond[1::2]
-init_cond_u[0:len(init_cond_u)] = 0.5 + 0.1 * np.cos(2. * np.pi * x[::2] / x[-1])
-init_cond_uc[0:len(init_cond_u)] = 0.5 + 0.1 * np.cos(2. * np.pi * x[1::2] / x[-1])
+init_cond_u[0:len(init_cond_u)] = 0.1 + 0.01 * np.cos(2. * np.pi * x[::2] / x[-1])
+init_cond_uc[0:len(init_cond_u)] = 1.5 + 0.5 * np.cos(2. * np.pi * x[1::2] / x[-1])
 
-t = np.linspace(0, 1000, 2000)
+t = np.linspace(0, 1500, 1500)
 
-Du = 1.;
-Duc = 100.;
-kon = 0.05;
-koff = 0.05;
-V = 10 ** -18;
-L = 10 ** -6;
-d = 5. * 10 ** -6
-M = 100. * (1. / x[-1]);
+Du = 1. * 10 ** -2
+Duc = 100. * 10 ** -2
+kon = 0.05
+koff = 0.05
+V = 2700.
+L = 60.
+d = 20.
 dx = len(x) / h
 sol = odeint(pde, init_cond, t, args=(Du, Duc, kon, koff, V, L, d, dx), ml=2, mu=2)
 
+##Calculate Modulator value
+max_u = np.max(sol[-1][::2]);
+min_u = np.min(sol[-1][::2])
+max_uc = np.max(sol[-1][1::2]);
+min_uc = np.min(sol[-1][1::2])
+utot = (max_u + min_u) / 2 * L * d + (max_uc + min_uc) / 2 * V
+print('Utot = {0} , Control relation = {1}'.format(utot, kon * utot / (d * (kon + koff))))
+
 ##2D plot
-plt.figure(figsize=(10, 7))
+plt.figure(figsize=(11, 8))
 # activator
 plt.subplot(221)
-plt.title('Activator profile')
+plt.title('Modulator profile')
 plt.xlabel('System size')
 plt.ylabel('Concentration')
 plt.plot(x[::2], sol[-1][::2], '-b')
 
 # inhibitor
 plt.subplot(222)
-plt.title('Inhibitor profile')
+plt.title('Cytoplasmic modulator profile')
 plt.xlabel('System size')
 plt.ylabel('Concentration')
 plt.plot(x[1::2], sol[-1][1::2], '-r')
@@ -94,14 +100,14 @@ ax_u.plot_surface(XX_u, YY_u, ZZ_u, rstride=20, cstride=20)
 ax_u.set_xlabel('Space')
 ax_u.set_ylabel('Time')
 ax_u.set_zlabel('Value')
-ax_u.set_title('Activator profile')
+ax_u.set_title('Modulator profile(M)')
 
 # Plot a basic wireframe for uc
 ax_uc.plot_surface(XX_uc, YY_uc, ZZ_uc, rstride=20, cstride=20)
 ax_uc.set_xlabel('Space')
 ax_uc.set_ylabel('Time')
 ax_uc.set_zlabel('Value')
-ax_uc.set_title('Activator profile')
+ax_uc.set_title('Cytoplasmic modulator profile (Mc)')
 # Show plot
 
 plt.show()
