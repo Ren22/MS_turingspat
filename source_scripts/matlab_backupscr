@@ -1,0 +1,128 @@
+function ras_vas_modulator
+clear all
+clc
+m = 0;
+n = 2;
+% x = linspace(0,100,2000);
+% t = linspace(0,000,2000);
+% x = linspace(0,10,100);
+% t = linspace(0,1000,2000);
+x = linspace(0,50,100);
+t = linspace(0,6000,2000);
+%working pair of t and x
+% x = linspace(0,100,1000);
+% t = linspace(0,500,5000);
+%all constants are set below
+Dv = 1; Dz = 20; Du = 1000;
+a = 0.2; b = -0.4; e = 0.6; d = -0.8; av = 5; v0 = 0.5; z0 = 0.5; kz = 0.01; q=0.001; az=5;
+%options = odeset('RelTol',2e+10);
+options = odeset('NonNegative',[]);
+sol = pdepe(m,@pdex4pde,@pdex4ic,@pdex4bc,x,t,options,Du,Dv,Dz,a,b,e,d,av,az,v0,z0,kz,n,q);
+u1 = sol(:,:,1);
+u2 = sol(:,:,2);
+u3 = sol(:,:,3);
+
+%!!!!delete when publish to thesis!
+
+figure
+subplot(2,3,1)       % Modulator 2D
+plot(x,u1(end,:))
+title('Morphogen 1 at t=end')
+xlabel('Distance x')
+
+subplot(2,3,2)       % Morphogen 2D
+plot(x,u2(end,:))
+title('Morphogen 2 at t=end')
+xlabel('Distance x')
+
+subplot(2,3,3)       % Morphogen 2D
+plot(x,u3(end,:))
+title('Modulator at t=end')
+xlabel('Distance x')
+%
+subplot(2,3,4)       % Modulator 3D
+surf(x,t,u1)
+title('Morphogen 1')
+xlabel('Distance x')
+ylabel('Time t')
+
+subplot(2,3,5)       % Morphogen 3D
+surf(x,t,u2)
+title('Morphogen 2')
+xlabel('Distance x')
+
+subplot(2,3,6)       % Modulator 3D
+surf(x,t,u3)
+title('Modulator')
+xlabel('Distance x')
+
+% ylabel('Time t')
+% % 2d profile at t=end
+% figure
+% plot(x,u1(5,:))
+% title('Solution at t = end')
+% xlabel('Distance x')
+% ylabel('Morphogen 1/activator')
+%
+% figure
+% plot(x,u2(5,:))
+% title('Solution at t = end')
+% xlabel('Distance x')
+% ylabel('Morphogen 2/inhibitor')
+%
+% figure
+% plot(x,u3(5,:))
+% title('Solution at t = end')
+% xlabel('Distance x')
+% ylabel('Modulator')
+%
+% % 3d surface
+% figure
+% surf(x,t,u1)
+% title('v Morphogen')
+% xlabel('Distance x')
+% ylabel('Time t')
+%
+% figure
+% surf(x,t,u2)
+% title('z morphogen')
+% xlabel('Distance x')
+% ylabel('Time t')
+%
+% figure
+% surf(x,t,u3)
+% title('u modulator')
+% xlabel('Distance x')
+% ylabel('Time t')
+% --------------------------------------------------------------
+function [c,f,s] = pdex4pde(x,t,u,DuDx,Du,Dv,Dz,a,b,e,d,av,az,v0,z0,kz,n,q)
+c = [1; 1; 1];
+f = [Dv; Dz; Du].*DuDx;
+
+%F1 = a*u(1)+b*u(2);%(a*(u(1)-v0)+b*(u(2)-z0)-av*(u(1)-v0)^3)*u(3)^n;
+%F2 = e*u(1)+d*u(2); %(c1*(u(1)-v0)+d*(u(2)-z0))*u(3)^n;
+F1 = (a*(u(1)-v0)+b*(u(2)-z0)-av*(u(1)-v0)^3)*u(3)^n;
+F2 = (e*(u(1)-v0)+d*(u(2)-z0))*u(3)^n;
+F3 = kz*u(3);
+s = [F1; F2; -F3];
+% --------------------------------------------------------------
+function u0 = pdex4ic(x,Du,Dv,Dz,a,b,e,d,av,az,v0,z0,kz,n,q);
+u0 = [0.5+0.05*cos(2*pi*x/3); 0.5+0.05*cos(2*pi*x/3); 0.5+0.05*cos(2*pi*x/3)];%; 0.01+0.005*cos(2*pi*x/100*5)];
+%u0 = [1; 1; 1];
+%u0 = [10+0.01*sin(pi*x); 1; 1];
+% --------------------------------------------------------------
+function [pl,ql,pr,qr] = pdex4bc(xl,ul,xr,ur,t,Du,Dv,Dz,a,b,e,d,av,az,v0,z0,kz,n,q)
+ pl = [0; 0; q];
+ ql = [1; 1; 1/Du];
+ pr = [0; 0; 0];
+ qr = [1; 1; 1];
+
+%  pl = [0; 0; 0.001];
+%  ql = [1; 1 ; 1];
+%  pr = [0; 0; 0];
+%  qr = [1; 1; 1];
+
+% pl = [ul(1)-ur(1); ul(2)-ur(2); ul(3)-ur(3)];
+% ql = [1;1;1];
+% pr = [0; 0; 0];
+% qr = [1;1;1];

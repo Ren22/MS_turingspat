@@ -30,22 +30,32 @@ def pde(y, t, Du, Duc, kon, koff, V, L, d, dx):
 h = 100.
 x = np.linspace(0., 100., num=h)
 
-# #step-like function
-# init_cond = [0]*(len(x))
-# for i in range(int(round(0.2*len(init_cond)))):
-#     init_cond[i] = 1.
+##step like as initial_function
+# init_cond = np.empty_like(x)
+# init_cond_u = init_cond[::2]
+# init_cond_v = init_cond[1::2]
+# u_02 = int(round(0.2 * len(init_cond_u)))
+# v_02 = int(round(0.2 * len(init_cond_v)))
+# u_08 = int(round(0.8 * len(init_cond_u)))
+# v_08 = int(round(0.8 * len(init_cond_v)))
+# init_cond_u[0:u_02] = [0.6] * u_02
+# init_cond_u[u_02:u_08] = [0.5] * (u_08 - u_02)
+# init_cond_u[u_08:len(init_cond_u)] = [0.6] * (len(init_cond_u) - u_08)
+# init_cond_v[0:v_02] = [0.6] * v_02
+# init_cond_v[u_02:u_08] = [0.5] * (v_08 - v_02)
+# init_cond_v[v_08:len(init_cond_v)] = [0.6] * (len(init_cond_v) - v_08)
 
-# Sinusoids as initial funct
+# # Sinusoids as initial funct
 init_cond = np.empty_like(x)
 init_cond_u = init_cond[::2]
 init_cond_uc = init_cond[1::2]
-init_cond_u[0:len(init_cond_u)] = 0.1 + 0.01 * np.cos(2. * np.pi * x[::2] / x[-1])
-init_cond_uc[0:len(init_cond_u)] = 1.5 + 0.5 * np.cos(2. * np.pi * x[1::2] / x[-1])
+init_cond_u[0:len(init_cond_u)] = 0.1 + 0.05 * np.cos(2. * np.pi * x[::2] / x[-1])
+init_cond_uc[0:len(init_cond_u)] = 1.45 + 0.5 * np.cos(2. * np.pi * x[1::2] / x[-1])
 
-t = np.linspace(0, 1500, 1500)
+t = np.linspace(0, 12500, 12500)
 
-Du = 1. * 10 ** -2
-Duc = 100. * 10 ** -2
+Du = 400.  # * 10 ** -2
+Duc = 1.  # * 10 ** -2
 kon = 0.05
 koff = 0.05
 V = 2700.

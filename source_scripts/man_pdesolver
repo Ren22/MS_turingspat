@@ -24,6 +24,8 @@ dx = len(x) / h
 init_cond = [0] * (len(x))
 for i in range(int(round(0.2 * len(init_cond)))):
     init_cond[i] = 1.
+for i in range(int(round(0.8 * len(init_cond))), len(init_cond)):
+    init_cond[i] = 1.
 # print(init_cond)
 
 t = np.linspace(0, 125, 125)
