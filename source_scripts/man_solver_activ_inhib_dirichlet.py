@@ -15,7 +15,6 @@ u0 = 0.5
 v0 = 0.5
 n = -2.
 
-
 # def wave_search(size, size_segments, time_period, times, au, Du):
 
 def f(u, v, M, a, b, c, d, au, u0, v0, n):
@@ -46,11 +45,11 @@ def pde(y, t, Du, Dv, a, b, c, d, au, u0, v0, n, M, dx):
 
 ## Space definition
 
-h = 152.
-x = np.linspace(0., 76., num=h)
+h = 120.
+x = np.linspace(0., 60., num=h)
 M = 100. * (1. / x[-1])
 dx = len(x) / h
-t = np.linspace(0, 1600, 1600)
+t = np.linspace(0, 10000, 10000)
 
 ##Cosinusoids as initial function
 # init_cond = np.empty_like(x)
