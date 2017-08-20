@@ -72,7 +72,7 @@ for size in np.arange(40., 120., 1.):
     # init_cond_v[u_045:u_055] = [0.1] * (v_055 - v_045)
     # init_cond_v[v_055:len(init_cond_v)] = [0.1] * (len(init_cond_v) - v_055)
 
-    ## Step like as initial_function
+    # Step like as initial_function
     init_cond = np.empty_like(x)
     init_cond_u = init_cond[::2]
     init_cond_v = init_cond[1::2]
