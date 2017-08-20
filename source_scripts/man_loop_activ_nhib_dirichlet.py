@@ -107,8 +107,8 @@ for size in np.arange(40., 120., 1.):
     # print(wavelen * 2.)
 
     # Write out output to the file
-    df_new = pd.DataFrame([[size, size_segments, au, Du, wavelen * 2.]],
-                          columns=['size', 'size_segments', 'a_u', 'Du', 'wavelength'])
+    df_new = pd.DataFrame([[size, size_segments, a, Du, wavelen * 2.]],
+                          columns=['size', 'size_segments', 'a', 'Du', 'wavelength'])
 
     try:
         df = pd.read_csv('results/data.csv')
@@ -168,7 +168,7 @@ for size in np.arange(40., 120., 1.):
     # plt.show()
 
     # Save Plot
-    plt.savefig('results/plots/{0}_{1}_{2}_{3}.png'.format(size, size_segments, au, Du))
+    plt.savefig('results/plots/{0}_{1}_{2}_{3}.png'.format(size, size_segments, a, Du))
 
     # Close Plot
 
