@@ -15,14 +15,11 @@ u0 = 0.5
 v0 = 0.5
 n = -2.
 
-
 def f(u, v, M, a, b, c, d, au, u0, v0, n):
     return (a * (u - u0) + b * (v - v0) - au * (u - u0) ** 3) * M ** n
 
-
 def g(u, v, M, a, b, c, d, au, u0, v0, n):
     return (c * (u - u0) + d * (v - v0)) * M ** n
-
 
 def pde(y, t, Du, Dv, a, b, c, d, au, u0, v0, n, M, dx):
     u = y[::2]
@@ -32,15 +29,14 @@ def pde(y, t, Du, Dv, a, b, c, d, au, u0, v0, n, M, dx):
     dudt = dydt[::2]
     dvdt = dydt[1::2]
 
-    dudt[0] = 0  # f(u[0], v[0], M, a, b, c, d, au, u0, v0, n) + Du * (-2.0 * u[0] + 2.0 * u[1]) / dx ** 2
+    dudt[0] = 0
     dudt[1:-1] = f(u[1:-1], v[1:-1], M, a, b, c, d, au, u0, v0, n) + Du * np.diff(u, 2) / dx ** 2
-    dudt[-1] = 0  # f(u[-1], v[-1], M, a, b, c, d, au, u0, v0, n) + Du * (- 2.0 * u[-1] + 2.0 * u[-2]) / dx ** 2
-    dvdt[0] = 0  # g(u[0], v[0], M, a, b, c, d, au, u0, v0, n) + Dv * (-2.0 * v[0] + 2.0 * v[1]) / dx ** 2
+    dudt[-1] = 0
+    dvdt[0] = 0
     dvdt[1:-1] = g(u[1:-1], v[1:-1], M, a, b, c, d, au, u0, v0, n) + Dv * np.diff(v, 2) / dx ** 2
-    dvdt[-1] = 0  # g(u[-1], v[-1], M, a, b, c, d, au, u0, v0, n) + Dv * (-2.0 * v[-1] + 2.0 * v[-2]) / dx ** 2
-
+    dvdt[-1] = 0
+    
     return dydt
-
 
 # h = 200.
 # x = np.linspace(0., 100., num=h)
