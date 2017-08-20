@@ -95,7 +95,7 @@ def wave_search(size, size_segments, time_period, times, au, Du):
 
     u = rxd.Species(where, d=Du, initial=0.5)  # activator
     z = rxd.Species(where, d=20, initial=0.5)  # inhibitor
-    v = rxd.Species(where, d=0, initial=(1 / dend.L) * 100)  # modulator
+    v = rxd.Species(where, d=0, initial=(1 / dend.L) * 30)  # modulator
 
     # HOW they act
 
@@ -154,6 +154,9 @@ def wave_search(size, size_segments, time_period, times, au, Du):
     # inhibitor FFT
     Y2 = np.fft.fft(z_fft_y)
     X2 = np.linspace(0, fa / 2, N, endpoint=True)
+    #
+    # if ((np.amax(Y1) - np.amin(Y1) < .01) or (np.amax(Y2) - np.amin(Y2) < .01)):
+    #     return 0
 
     if (len(X) == len(2.0 * np.abs(Y1[:N] / N))):
         u_maxx = (np.argmax(2.0 * np.abs(Y1[:N] / N)))
@@ -165,6 +168,9 @@ def wave_search(size, size_segments, time_period, times, au, Du):
     return wavelen
 
 wl = wave_search(size, size_segments, time_period, times, au, Du)
+
+# if (wl == 0):
+
 
 runtime = time.time() - start_time1
 
