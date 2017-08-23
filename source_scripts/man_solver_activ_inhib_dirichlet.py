@@ -45,8 +45,8 @@ def pde(y, t, Du, Dv, a, b, c, d, au, u0, v0, n, M, dx):
 
 ## Space definition
 
-h = 120.
-x = np.linspace(0., 60., num=h)
+h = 170.
+x = np.linspace(0., 85., num=h)
 M = 100. * (1. / x[-1])
 dx = len(x) / h
 t = np.linspace(0, 10000, 10000)

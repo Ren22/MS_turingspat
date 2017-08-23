@@ -44,10 +44,11 @@ def pde(y, t, Du, Dv, a, b, c, d, au, u0, v0, n, M, dx):
 t = np.linspace(0, 1600, 1600)
 
 for size in np.arange(40., 120., 1.):
-    size_segments = 2 * size
+    discretizing_factor = 6.
+    size_segments = discretizing_factor * size
+    dx = size / size_segments
     x = np.linspace(0., size, size_segments)
     M = 100. * (1. / x[-1])
-    dx = len(x) / size_segments
 
     ## Cosinusoids as initial function
     # init_cond = np.empty_like(x)
@@ -80,34 +81,38 @@ for size in np.arange(40., 120., 1.):
     v_02 = int(round(0.2 * len(init_cond_v)))
     u_08 = int(round(0.8 * len(init_cond_u)))
     v_08 = int(round(0.8 * len(init_cond_v)))
-    init_cond_u[0:u_02] = [0.6] * u_02
-    init_cond_u[u_02:u_08] = [0.5] * (u_08 - u_02)
-    init_cond_u[u_08:len(init_cond_u)] = [0.6] * (len(init_cond_u) - u_08)
-    init_cond_v[0:v_02] = [0.6] * v_02
-    init_cond_v[u_02:u_08] = [0.5] * (v_08 - v_02)
-    init_cond_v[v_08:len(init_cond_v)] = [0.6] * (len(init_cond_v) - v_08)
+    init_cond_u[0:u_02] = [0.55] * u_02
+    init_cond_u[u_02:u_08] = [0.4] * (u_08 - u_02)
+    init_cond_u[u_08:len(init_cond_u)] = [0.55] * (len(init_cond_u) - u_08)
+    init_cond_v[0:v_02] = [0.55] * v_02
+    init_cond_v[u_02:u_08] = [0.4] * (v_08 - v_02)
+    init_cond_v[v_08:len(init_cond_v)] = [0.55] * (len(init_cond_v) - v_08)
 
     sol = odeint(pde, init_cond, t, args=(Du, Dv, a, b, c, d, au, u0, v0, n, M, dx), ml=2, mu=2)
 
     # Activator FFT source files
     u_fft_y = sol[-1][::2] - np.mean(sol[-1][::2])
     u_fft_x = x[::2]
-    u_fft_x_norm = x[-1] * np.array(u_fft_x)
 
     # Activator FFT calculation
     Y1 = np.fft.fft(u_fft_y)
     N = len(Y1) / 2 + 1
-    dt = x[-1] / size_segments
-    fa = 1.0 / dt
+    # dt = x[-1] / size_segments
+    fa = 1.0 / dx
     X = np.linspace(0, fa / 2, N, endpoint=True)
+
+    # fig = plt.figure
+    plt.plot(X, 2.0 * np.abs(Y1[:N] / N))
+    plt.savefig('results/plots/Fourier_{0}_{1}_{2}.png'.format(size, a, Du))
+    plt.close()
 
     if (len(X) == len(2.0 * np.abs(Y1[:N] / N))):
         u_maxx = (np.argmax(2.0 * np.abs(Y1[:N] / N)))
-        wavelen = np.around(1 / X[u_maxx])
+        wavelen = np.around(1. / X[u_maxx])
     # print(wavelen * 2.)
 
     # Write out output to the file
-    df_new = pd.DataFrame([[size, size_segments, a, Du, wavelen * 2.]],
+    df_new = pd.DataFrame([[size, size_segments, a, Du, wavelen * discretizing_factor]],
                           columns=['size', 'size_segments', 'a', 'Du', 'wavelength'])
 
     try:
@@ -148,7 +153,7 @@ for size in np.arange(40., 120., 1.):
     ax = plt.subplot(224, projection='3d')
 
     # Grab data for 3D
-    xx = x[::2]
+    xx = u_fft_x
     yy = t
     zz = []
     for i in sol:
