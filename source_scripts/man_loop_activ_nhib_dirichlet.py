@@ -30,25 +30,32 @@ def pde(y, t, Du, Dv, a, b, c, d, au, u0, v0, n, M, dx):
     dudt = dydt[::2]
     dvdt = dydt[1::2]
 
-    dudt[0] = 0
+    # dudt[0] = 0
+    # dudt[1:-1] = f(u[1:-1], v[1:-1], M, a, b, c, d, au, u0, v0, n) + Du * np.diff(u, 2) / dx ** 2
+    # dudt[-1] = 0
+    # dvdt[0] = 0
+    # dvdt[1:-1] = g(u[1:-1], v[1:-1], M, a, b, c, d, au, u0, v0, n) + Dv * np.diff(v, 2) / dx ** 2
+    # dvdt[-1] = 0
+
+    dudt[0] = f(u[0], v[0], M, a, b, c, d, au, u0, v0, n) + Du * (-2.0 * u[0] + 2.0 * u[1]) / dx ** 2
     dudt[1:-1] = f(u[1:-1], v[1:-1], M, a, b, c, d, au, u0, v0, n) + Du * np.diff(u, 2) / dx ** 2
-    dudt[-1] = 0
-    dvdt[0] = 0
+    dudt[-1] = f(u[-1], v[-1], M, a, b, c, d, au, u0, v0, n) + Du * (- 2.0 * u[-1] + 2.0 * u[-2]) / dx ** 2
+    dvdt[0] = g(u[0], v[0], M, a, b, c, d, au, u0, v0, n) + Dv * (-2.0 * v[0] + 2.0 * v[1]) / dx ** 2
     dvdt[1:-1] = g(u[1:-1], v[1:-1], M, a, b, c, d, au, u0, v0, n) + Dv * np.diff(v, 2) / dx ** 2
-    dvdt[-1] = 0
+    dvdt[-1] = g(u[-1], v[-1], M, a, b, c, d, au, u0, v0, n) + Dv * (-2.0 * v[-1] + 2.0 * v[-2]) / dx ** 2
 
     return dydt
-
 
 # Main Solver
 t = np.linspace(0, 1600, 1600)
 
-for size in np.arange(40., 120., 1.):
+for size in np.arange(10., 120., 1.):
     discretizing_factor = 6.
     size_segments = discretizing_factor * size
-    dx = size / size_segments
     x = np.linspace(0., size, size_segments)
     M = 100. * (1. / x[-1])
+    dx = (size / size_segments) * 2.
+
 
     ## Cosinusoids as initial function
     # init_cond = np.empty_like(x)
@@ -81,12 +88,12 @@ for size in np.arange(40., 120., 1.):
     v_02 = int(round(0.2 * len(init_cond_v)))
     u_08 = int(round(0.8 * len(init_cond_u)))
     v_08 = int(round(0.8 * len(init_cond_v)))
-    init_cond_u[0:u_02] = [0.55] * u_02
+    init_cond_u[0:u_02] = [0.52] * u_02
     init_cond_u[u_02:u_08] = [0.4] * (u_08 - u_02)
-    init_cond_u[u_08:len(init_cond_u)] = [0.55] * (len(init_cond_u) - u_08)
-    init_cond_v[0:v_02] = [0.55] * v_02
+    init_cond_u[u_08:len(init_cond_u)] = [0.52] * (len(init_cond_u) - u_08)
+    init_cond_v[0:v_02] = [0.52] * v_02
     init_cond_v[u_02:u_08] = [0.4] * (v_08 - v_02)
-    init_cond_v[v_08:len(init_cond_v)] = [0.55] * (len(init_cond_v) - v_08)
+    init_cond_v[v_08:len(init_cond_v)] = [0.52] * (len(init_cond_v) - v_08)
 
     sol = odeint(pde, init_cond, t, args=(Du, Dv, a, b, c, d, au, u0, v0, n, M, dx), ml=2, mu=2)
 
@@ -98,7 +105,7 @@ for size in np.arange(40., 120., 1.):
     Y1 = np.fft.fft(u_fft_y)
     N = len(Y1) / 2 + 1
     # dt = x[-1] / size_segments
-    fa = 1.0 / dx
+    fa = 1.0 / (dx)
     X = np.linspace(0, fa / 2, N, endpoint=True)
 
     # fig = plt.figure
@@ -107,12 +114,12 @@ for size in np.arange(40., 120., 1.):
     plt.close()
 
     if (len(X) == len(2.0 * np.abs(Y1[:N] / N))):
-        u_maxx = (np.argmax(2.0 * np.abs(Y1[:N] / N)))
+        u_maxx = (np.argmax(2.0 * np.abs(Y1[:N] / N)))  # rename u_maxx
         wavelen = np.around(1. / X[u_maxx])
     # print(wavelen * 2.)
 
     # Write out output to the file
-    df_new = pd.DataFrame([[size, size_segments, a, Du, wavelen * discretizing_factor]],
+    df_new = pd.DataFrame([[size, size_segments, a, Du, wavelen]],
                           columns=['size', 'size_segments', 'a', 'Du', 'wavelength'])
 
     try:
