@@ -5,7 +5,7 @@ import pandas as pd
 
 a, b, c, d, au, u0, v0, n, M, u, v = symbols('a, b, c, d, au, u0, v0, n, M, u, v ')
 
-f = a * (u - u0) * M ** n + b * (v - v0) - (au * (u - u0) ** 3) * M ** n
+f = a * (u - u0) * M ** n + b * (v - v0) * M ** n - (au * (u - u0) ** 3) * M ** n
 g = c * (u - u0) * M ** n + d * (v - v0) * M ** n
 
 fu = diff(f, u)
