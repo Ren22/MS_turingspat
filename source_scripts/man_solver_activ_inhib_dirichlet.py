@@ -18,7 +18,7 @@ n = -2.
 # def wave_search(size, size_segments, time_period, times, au, Du):
 
 def f(u, v, M, a, b, c, d, au, u0, v0, n):
-    return (a * (u - u0) + b * (v - v0) - au * (u - u0) ** 3) * M ** n
+    return (a * (u - u0) + b * (v - v0) - au * (u - u0) ** 3)
 
 
 def g(u, v, M, a, b, c, d, au, u0, v0, n):
