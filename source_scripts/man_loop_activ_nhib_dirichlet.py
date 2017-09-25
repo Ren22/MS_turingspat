@@ -17,10 +17,10 @@ v0 = 0.5
 n = -2.
 
 def f(u, v, M, a, b, c, d, au, u0, v0, n):
-    return a * (u - u0) * M ** n + b * (v - v0) * M ** n - (au * (u - u0) ** 3) * M ** n
+    return a * (u - u0) + b * (v - v0) - (au * (u - u0) ** 3)
 
 def g(u, v, M, a, b, c, d, au, u0, v0, n):
-    return c * (u - u0) * M ** n + d * (v - v0) * M ** n
+    return c * (u - u0) + d * (v - v0) * M ** n
 
 def pde(y, t, Du, Dv, a, b, c, d, au, u0, v0, n, M, dx):
     u = y[::2]
