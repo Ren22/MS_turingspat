@@ -24,21 +24,22 @@ criter2 = fu * gv - fv * gu
 criter3 = (Dv / Du) * fu + gv
 criter4 = ((Dv / Du) * fu + gv) ** 2 - 4 * (Dv / Du) * (fu * gv - fv * gu)
 
+print(criter0)
 for size in np.arange(10., 200., 1.):
     criter0_subs, criter1_subs, criter2_subs, criter3_subs, criter4_subs = \
-        criter0.subs([(a, 0.4), (b, -0.4), (c, 0.6), (d, -0.8),
+        criter0.subs([(a, 0.2 * 2), (b, -0.4 / 2), (c, 0.6), (d, -0.8),
                       (au, 5.), (u0, 0.5), (v0, 0.5), (n, -2.), (M, 100. * (1. / size)),
                       (u, 0.5), (v, 0.5)]), \
-        criter1.subs([(a, 0.4), (b, -0.4), (c, 0.6), (d, -0.8),
+        criter1.subs([(a, 0.2 * 2), (b, -0.4 / 2), (c, 0.6), (d, -0.8),
                       (au, 5.), (u0, 0.5), (v0, 0.5), (n, -2.), (M, 100. * (1. / size)),
                       (u, 0.5), (v, 0.5)]), \
-        criter2.subs([(a, 0.4), (b, -0.4), (c, 0.6), (d, -0.8),
+        criter2.subs([(a, 0.2 * 2), (b, -0.4 / 2), (c, 0.6), (d, -0.8),
                       (au, 5.), (u0, 0.5), (v0, 0.5), (n, -2.), (M, 100. * (1. / size)),
                       (u, 0.5), (v, 0.5)]), \
-        criter3.subs([(a, 0.4), (b, -0.4), (c, 0.6), (d, -0.8),
+        criter3.subs([(a, 0.2 * 2), (b, -0.4 / 2), (c, 0.6), (d, -0.8),
                       (au, 5.), (u0, 0.5), (v0, 0.5), (n, -2.), (M, 100. * (1. / size)),
                       (u, 0.5), (v, 0.5)]), \
-        criter4.subs([(a, 0.4), (b, -0.4), (c, 0.6), (d, -0.8),
+        criter4.subs([(a, 0.2 * 2), (b, -0.4 / 2), (c, 0.6), (d, -0.8),
                       (au, 5.), (u0, 0.5), (v0, 0.5), (n, -2.), (M, 100. * (1. / size)),
                       (u, 0.5), (v, 0.5)])
 
