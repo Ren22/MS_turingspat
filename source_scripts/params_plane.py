@@ -23,15 +23,14 @@ denominator = (fu ** 2)
 criter0 = numerator / denominator
 
 # Paramters range definition
-a_range = np.arange(.1, .2, .1)  # rows
-b_range = np.arange(-.1, -.3, -.1)  # columns
+a_range = np.arange(.1, .3, .05)  # rows
+b_range = np.arange(-.1, -.3, -.05)  # columns
 sys_size = 100.
 
 # Matrix definition
-Z = np.empty((len(a_range) + 1, len(b_range) + 1));
-
-Z[0, 1:] = b_range
-Z[1:, 0] = a_range
+Z = np.empty((len(a_range) + 1, len(b_range) + 1))
+Z[0, 1:] = [np.round(elem, 2) for elem in b_range]  # all b_range assigned to 0 row
+Z[1:, 0] = [np.round(elem, 2) for elem in a_range]  # all a_range assigned to 0 column
 
 k = 1;
 m = 1;
@@ -45,23 +44,23 @@ for i in a_range:
                             (au, 5.), (u0, 0.5), (v0, 0.5), (n, -2.), (M, 100. * (1. / sys_size)),
                             (u, 0.5), (v, 0.5)])
         if res.is_Mul:
-            res = 0.
+            res = 2 * Dv /Du
         Z[k, m] = res
         m = m + 1
         # print(k, m)
     k = k + 1
-    m = 0
-print(Z)
+    m = 1
+
 np.savetxt('results/instab_params_matrix.csv', Z, delimiter=",")
 
 X, Y = np.meshgrid(a_range, b_range)
 
 ax = plt.subplot(projection='3d')
-ax.plot_wireframe(X, Y, np.transpose(Z), color='r')  # rstride=20, cstride=20)
-# ax.plot_surface(X, Y, Dv / Du)  # Criterion surface
+ax.plot_surface(X, Y, np.transpose(Z[1:, 1:]))  # rstride=20, cstride=20)
+ax.plot_wireframe(X, Y, Dv / Du)  # Criterion surface
 ax.set_xlabel('a')
 ax.set_ylabel('b')
 ax.set_zlabel('Crit.Value')
 ax.set_title('a, b coefficienets, sys.size = {0}'.format(sys_size))
 
-# plt.show()
+plt.show()
