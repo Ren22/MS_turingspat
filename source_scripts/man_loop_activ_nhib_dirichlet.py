@@ -7,8 +7,8 @@ from mpl_toolkits.mplot3d import axes3d
 
 Du = 1.
 Dv = 20.
-a = 0.2 * 2
-b = -0.4 / 2
+a = 0.65
+b = -0.95
 c = 0.6
 d = -0.8
 au = 5.

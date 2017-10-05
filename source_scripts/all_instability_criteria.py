@@ -3,6 +3,13 @@ import sympy
 import numpy as np
 import pandas as pd
 
+### Used instability criteria ###
+#       0) (sqrt(fu * gv - fv * gu) + sqrt(-fv * gu)) ** 2)/fu ** 2
+#       1) fu+gv < 0 = {0},
+#       2) fu*gv-fv*gu > 0 = {1},
+#       3) dfu+gv > 0 = {2},
+#       4)(dfu+gv)^2-4d(fugv-fvgu) > 0 = {3}
+
 a, b, c, d, au, u0, v0, n, M, u, v = symbols('a, b, c, d, au, u0, v0, n, M, u, v ')
 
 f = a * (u - u0) * M ** n + b * (v - v0) - (au * (u - u0) ** 3)

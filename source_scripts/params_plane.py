@@ -23,8 +23,8 @@ denominator = (fu ** 2)
 criter0 = numerator / denominator
 
 # Paramters range definition
-a_range = np.arange(.1, .3, .05)  # rows
-b_range = np.arange(-.1, -.3, -.05)  # columns
+a_range = np.arange(.1, 1., .05)  # rows
+b_range = np.arange(-.1, -1., -.05)  # columns
 sys_size = 100.
 
 # Matrix definition
@@ -56,7 +56,7 @@ np.savetxt('results/instab_params_matrix.csv', Z, delimiter=",")
 X, Y = np.meshgrid(a_range, b_range)
 
 ax = plt.subplot(projection='3d')
-ax.plot_surface(X, Y, np.transpose(Z[1:, 1:]))  # rstride=20, cstride=20)
+ax.plot_surface(X, Y, np.transpose(Z[1:, 1:]), color='brown')  # rstride=20, cstride=20)
 ax.plot_wireframe(X, Y, Dv / Du)  # Criterion surface
 ax.set_xlabel('a')
 ax.set_ylabel('b')
