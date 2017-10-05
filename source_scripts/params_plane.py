@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import axes3d
 from sympy import *
 import sympy
+import pandas as pd
 
 a, b, c, d, au, u0, v0, n, M, u, v = symbols('a, b, c, d, au, u0, v0, n, M, u, v')
 
@@ -22,13 +23,18 @@ denominator = (fu ** 2)
 criter0 = numerator / denominator
 
 # Paramters range definition
-a_range = np.arange(0.1, 0.3, .1)
-b_range = np.arange(-0.3, -1., -.1)
+a_range = np.arange(.1, .2, .1)  # rows
+b_range = np.arange(-.1, -.3, -.1)  # columns
+sys_size = 100.
 
-sys_size = 50.
-Z = np.empty((len(a_range), len(b_range)));
-k = 0;
-m = 0;
+# Matrix definition
+Z = np.empty((len(a_range) + 1, len(b_range) + 1));
+
+Z[0, 1:] = b_range
+Z[1:, 0] = a_range
+
+k = 1;
+m = 1;
 
 for i in a_range:
     for j in b_range:
@@ -40,21 +46,22 @@ for i in a_range:
                             (u, 0.5), (v, 0.5)])
         if res.is_Mul:
             res = 0.
-        Z[k][m] = res
+        Z[k, m] = res
         m = m + 1
         # print(k, m)
     k = k + 1
     m = 0
+print(Z)
+np.savetxt('results/instab_params_matrix.csv', Z, delimiter=",")
 
 X, Y = np.meshgrid(a_range, b_range)
-print(Z)
 
 ax = plt.subplot(projection='3d')
-ax.plot_surface(X, Y, Z)  # rstride=20, cstride=20)
-ax.plot_surface(X, Y, Dv / Du)  # Criterion surface
+ax.plot_wireframe(X, Y, np.transpose(Z), color='r')  # rstride=20, cstride=20)
+# ax.plot_surface(X, Y, Dv / Du)  # Criterion surface
 ax.set_xlabel('a')
 ax.set_ylabel('b')
 ax.set_zlabel('Crit.Value')
 ax.set_title('a, b coefficienets, sys.size = {0}'.format(sys_size))
 
-plt.show()
+# plt.show()
