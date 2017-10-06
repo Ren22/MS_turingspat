@@ -31,24 +31,17 @@ criter2 = fu * gv - fv * gu
 criter3 = (Dv / Du) * fu + gv
 criter4 = ((Dv / Du) * fu + gv) ** 2 - 4 * (Dv / Du) * (fu * gv - fv * gu)
 
-print(criter0)
+# print(criter0)
 for size in np.arange(10., 200., 1.):
+    params_list = [(a, 0.65), (b, -0.95), (c, 0.6), (d, -0.8),
+                   (au, 5.), (u0, 0.5), (v0, 0.5), (n, -2.), (M, 100. * (1. / size)),
+                   (u, 0.5), (v, 0.5)]
     criter0_subs, criter1_subs, criter2_subs, criter3_subs, criter4_subs = \
-        criter0.subs([(a, 0.2 * 2), (b, -0.4 / 2), (c, 0.6), (d, -0.8),
-                      (au, 5.), (u0, 0.5), (v0, 0.5), (n, -2.), (M, 100. * (1. / size)),
-                      (u, 0.5), (v, 0.5)]), \
-        criter1.subs([(a, 0.2 * 2), (b, -0.4 / 2), (c, 0.6), (d, -0.8),
-                      (au, 5.), (u0, 0.5), (v0, 0.5), (n, -2.), (M, 100. * (1. / size)),
-                      (u, 0.5), (v, 0.5)]), \
-        criter2.subs([(a, 0.2 * 2), (b, -0.4 / 2), (c, 0.6), (d, -0.8),
-                      (au, 5.), (u0, 0.5), (v0, 0.5), (n, -2.), (M, 100. * (1. / size)),
-                      (u, 0.5), (v, 0.5)]), \
-        criter3.subs([(a, 0.2 * 2), (b, -0.4 / 2), (c, 0.6), (d, -0.8),
-                      (au, 5.), (u0, 0.5), (v0, 0.5), (n, -2.), (M, 100. * (1. / size)),
-                      (u, 0.5), (v, 0.5)]), \
-        criter4.subs([(a, 0.2 * 2), (b, -0.4 / 2), (c, 0.6), (d, -0.8),
-                      (au, 5.), (u0, 0.5), (v0, 0.5), (n, -2.), (M, 100. * (1. / size)),
-                      (u, 0.5), (v, 0.5)])
+        criter0.subs(params_list), \
+        criter1.subs(params_list), \
+        criter2.subs(params_list), \
+        criter3.subs(params_list), \
+        criter4.subs(params_list)
 
     df_new = pd.DataFrame([[size, Dv / Du, criter0_subs, criter1_subs, criter2_subs, criter3_subs, criter4_subs]],
                           columns=['size', 'Dv/Du', 'Cr.0: [val]<Dv/Du', 'Cr.1:[val]<0',

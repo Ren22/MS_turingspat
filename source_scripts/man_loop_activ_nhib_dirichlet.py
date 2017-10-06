@@ -51,7 +51,7 @@ def pde(y, t, Du, Dv, a, b, c, d, au, u0, v0, n, M, dx):
 # Main Solver
 t = np.linspace(0, 5000, 5000)
 
-for size in np.arange(10., 120., 1.):
+for size in np.arange(120., 220., 1.):
     discretizing_factor = 6.
     size_segments = discretizing_factor * size
     x = np.linspace(0., size, size_segments)

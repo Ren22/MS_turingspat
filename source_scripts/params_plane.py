@@ -22,10 +22,10 @@ numerator = (sympy.sqrt(fu * gv - fv * gu) + sympy.sqrt(-fv * gu)) ** 2
 denominator = (fu ** 2)
 criter0 = numerator / denominator
 
-# Paramters range definition
+# Parameters range definition
 a_range = np.arange(.1, 1., .05)  # rows
 b_range = np.arange(-.1, -1., -.05)  # columns
-sys_size = 100.
+sys_size = 125.
 
 # Matrix definition
 Z = np.empty((len(a_range) + 1, len(b_range) + 1))
