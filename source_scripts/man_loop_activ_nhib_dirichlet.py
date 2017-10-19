@@ -6,11 +6,11 @@ from matplotlib import gridspec
 from mpl_toolkits.mplot3d import axes3d
 
 Du = 1.
-Dv = 20.
-a = 0.65
-b = -0.95
-c = 0.6
-d = -0.8
+Dv = 90.
+a = 0.4
+b = -2.
+c = 2.
+d = -2.
 au = 5.
 u0 = 0.5
 v0 = 0.5
@@ -31,17 +31,17 @@ def pde(y, t, Du, Dv, a, b, c, d, au, u0, v0, n, M, dx):
     dvdt = dydt[1::2]
 
     # # Dirichlet
-    # dudt[0] = 0
-    # dudt[1:-1] = f(u[1:-1], v[1:-1], M, a, b, c, d, au, u0, v0, n) + Du * np.diff(u, 2) / dx ** 2
-    # dudt[-1] = 0
+    dudt[0] = 0
+    dudt[1:-1] = f(u[1:-1], v[1:-1], M, a, b, c, d, au, u0, v0, n) + Du * np.diff(u, 2) / dx ** 2
+    dudt[-1] = 0
     # dvdt[0] = 0
     # dvdt[1:-1] = g(u[1:-1], v[1:-1], M, a, b, c, d, au, u0, v0, n) + Dv * np.diff(v, 2) / dx ** 2
     # dvdt[-1] = 0
 
     # # Neumann
-    dudt[0] = f(u[0], v[0], M, a, b, c, d, au, u0, v0, n) + Du * (-2.0 * u[0] + 2.0 * u[1]) / dx ** 2
-    dudt[1:-1] = f(u[1:-1], v[1:-1], M, a, b, c, d, au, u0, v0, n) + Du * np.diff(u, 2) / dx ** 2
-    dudt[-1] = f(u[-1], v[-1], M, a, b, c, d, au, u0, v0, n) + Du * (- 2.0 * u[-1] + 2.0 * u[-2]) / dx ** 2
+    # dudt[0] = f(u[0], v[0], M, a, b, c, d, au, u0, v0, n) + Du * (-2.0 * u[0] + 2.0 * u[1]) / dx ** 2
+    # dudt[1:-1] = f(u[1:-1], v[1:-1], M, a, b, c, d, au, u0, v0, n) + Du * np.diff(u, 2) / dx ** 2
+    # dudt[-1] = f(u[-1], v[-1], M, a, b, c, d, au, u0, v0, n) + Du * (- 2.0 * u[-1] + 2.0 * u[-2]) / dx ** 2
     dvdt[0] = g(u[0], v[0], M, a, b, c, d, au, u0, v0, n) + Dv * (-2.0 * v[0] + 2.0 * v[1]) / dx ** 2
     dvdt[1:-1] = g(u[1:-1], v[1:-1], M, a, b, c, d, au, u0, v0, n) + Dv * np.diff(v, 2) / dx ** 2
     dvdt[-1] = g(u[-1], v[-1], M, a, b, c, d, au, u0, v0, n) + Dv * (-2.0 * v[-1] + 2.0 * v[-2]) / dx ** 2
@@ -51,21 +51,20 @@ def pde(y, t, Du, Dv, a, b, c, d, au, u0, v0, n, M, dx):
 # Main Solver
 t = np.linspace(0, 5000, 5000)
 
-for size in np.arange(120., 220., 1.):
+for size in np.arange(1., 120., 1.):
     discretizing_factor = 6.
     size_segments = discretizing_factor * size
     x = np.linspace(0., size, size_segments)
-    M = 100. * (1. / x[-1])
+    M = 20. * (1. / x[-1])
     dx = (size / size_segments) * 2.
 
 
     ## Cosinusoids as initial function
-    # init_cond = np.empty_like(x)
-    # init_cond_u = init_cond[::2]
-    # init_cond_v = init_cond[1::2]
-    # init_cond_u[0:len(init_cond_u)] = 0.5 + 0.1 * np.cos(2. * np.pi * x[::2] / x[-1])
-    # init_cond_v[0:len(init_cond_u)] = 1. + 0
-    # .1 * np.cos(2. * np.pi * x[1::2] / x[-1])
+    init_cond = np.empty_like(x)
+    init_cond_u = init_cond[::2]
+    init_cond_v = init_cond[1::2]
+    init_cond_u[0:len(init_cond_u)] = 0.5 + 0.1 * np.cos(2. * np.pi * x[::2] / x[-1])
+    init_cond_v[0:len(init_cond_u)] = 0.5 + 0.1 * np.cos(2. * np.pi * x[1::2] / x[-1])
 
     ## Step like as initial_function
     # init_cond = np.empty_like(x)
@@ -83,19 +82,19 @@ for size in np.arange(120., 220., 1.):
     # init_cond_v[v_055:len(init_cond_v)] = [0.1] * (len(init_cond_v) - v_055)
 
     # Step like as initial_function
-    init_cond = np.empty_like(x)
-    init_cond_u = init_cond[::2]
-    init_cond_v = init_cond[1::2]
-    u_02 = int(round(0.2 * len(init_cond_u)))
-    v_02 = int(round(0.2 * len(init_cond_v)))
-    u_08 = int(round(0.8 * len(init_cond_u)))
-    v_08 = int(round(0.8 * len(init_cond_v)))
-    init_cond_u[0:u_02] = [0.52] * u_02
-    init_cond_u[u_02:u_08] = [0.4] * (u_08 - u_02)
-    init_cond_u[u_08:len(init_cond_u)] = [0.52] * (len(init_cond_u) - u_08)
-    init_cond_v[0:v_02] = [0.52] * v_02
-    init_cond_v[u_02:u_08] = [0.4] * (v_08 - v_02)
-    init_cond_v[v_08:len(init_cond_v)] = [0.52] * (len(init_cond_v) - v_08)
+    # init_cond = np.empty_like(x)
+    # init_cond_u = init_cond[::2]
+    # init_cond_v = init_cond[1::2]
+    # u_02 = int(round(0.2 * len(init_cond_u)))
+    # v_02 = int(round(0.2 * len(init_cond_v)))
+    # u_08 = int(round(0.8 * len(init_cond_u)))
+    # v_08 = int(round(0.8 * len(init_cond_v)))
+    # init_cond_u[0:u_02] = [0.52] * u_02
+    # init_cond_u[u_02:u_08] = [0.4] * (u_08 - u_02)
+    # init_cond_u[u_08:len(init_cond_u)] = [0.52] * (len(init_cond_u) - u_08)
+    # init_cond_v[0:v_02] = [0.52] * v_02
+    # init_cond_v[u_02:u_08] = [0.4] * (v_08 - v_02)
+    # init_cond_v[v_08:len(init_cond_v)] = [0.52] * (len(init_cond_v) - v_08)
 
     sol = odeint(pde, init_cond, t, args=(Du, Dv, a, b, c, d, au, u0, v0, n, M, dx), ml=2, mu=2)
 

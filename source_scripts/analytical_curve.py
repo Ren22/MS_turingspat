@@ -14,14 +14,14 @@ gu = diff(g, u)
 gv = diff(g, v)
 
 Du = 1.
-Dv = 20.
+Dv = 90.
 
 l = 2 * np.pi * (fu / (2 * Du) + gv / (2 * Dv)) ** (-1 / 2.)
-# print(l)
+print(l)
 
-for size in np.arange(10., 200., 1.):
-    l_subs = l.subs([(a, 0.65), (b, -0.95), (c, 0.6), (d, -0.8),
-                     (au, 5.), (u0, 0.5), (v0, 0.5), (n, -2.), (M, 100. * (1. / size)),
+for size in np.arange(5., 200., 1.):
+    l_subs = l.subs([(a, 0.4), (b, -2.), (c, 2.), (d, -2.),
+                     (au, 5.), (u0, 0.5), (v0, 0.5), (n, -2.), (M, 20. * (1. / size)),
                      (u, 0.5), (v, 0.5)])
 
     df_new = pd.DataFrame([[size, Dv / Du, l_subs]],
