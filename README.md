@@ -6,7 +6,8 @@ Previously I used Neuron RXD [https://neuron.yale.edu/neuron/static/docs/rxd/ind
 Up-to-date branch: https://github.com/Ren22/MS_turingspat/tree/Model13_newParam/source_scripts
 
 ## Abstract 
-A new mathematical model(based on parabollic PDEs) was developed to study the unexpected parameter dependencies of the cytoskeletal patterns in a cell, as recently observed by (Müller et al. 2014). As a starting point for the model, reaction-diffusion based Turing patterns are considered, which are later extended by an extra (molecular) component referred to as a modulator. Possible explanation for the observed cell’s behavior is sought with the mathematical model and the code provided solves them computationally.
+This repo provides all essentail code to calculate PDEs as well as to predict new models that may be of interest to other groups.
+Actin filaments (or microfilaments) are one of the essential cytoskeletal components of eukaryotic cells regulating their mechanical properties. Recent experiments (Müller et al. 2014) of HUVEC cells adhering on fibronectin stripes of different widths showed a peculiar dependency of microfilament patterns depending on the stripe width. I identify this behavior as “anti-scaling” (as the counter-part of scaling pattern formation studied many times in biology) and provide a mathematical model (based on parabollic PDEs) to study the unexpected parameter dependencies of the cytoskeletal patterns. 
 
 ## Contact
 If you're interested in the current project or you have some suggestion, don't hesitate to contact me.
